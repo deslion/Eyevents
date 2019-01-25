@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from EyeTrackingPackage.modules.python.AOI.AOI import AOI
+from modules.python.AOI.AOI import AOI
 
 
 class Trajectory(AOI):

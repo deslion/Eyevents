@@ -1,5 +1,5 @@
 import numpy as np
-from EyeTrackingPackage.modules.python.AOI.Rectangle import Rectangle
+from modules.python.AOI.Rectangle import Rectangle
 
 
 class AOI:

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.signal import savgol_filter
 
-from EyeTrackingPackage.modules.python.utils.values_checker import ValuesChecker
+from modules.python.utils.values_checker import ValuesChecker
 
 
 def get_trajectory_as_df(path, settings):
@@ -118,6 +118,14 @@ def calculate_angular_parameters(df, settings):
 
 
 def IVT(df, settings):
+    """Performs basic oculomotor events detections by velocity threshold.
+    Basic events are: fixations, saccades
+
+    :param df: coordinates data frame
+    :param settings: settings dictionary with filled oculus field
+    :return: data frame with additional parameters
+    :rtype: pandas.DataFrame
+    """
     df = df.copy()
     df['above_threshold'] = df['velAng'] > settings['oculus']['velocity_threshold']
     df['event'] = df['above_threshold'].replace([True, False], ['Saccade', 'Fixation'])

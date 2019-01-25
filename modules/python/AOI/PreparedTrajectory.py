@@ -1,6 +1,7 @@
-from EyeTrackingPackage.modules.python.AOI.Trajectory import Trajectory
+from modules.python.AOI.Trajectory import Trajectory
 import numpy as np
 from tqdm import tqdm, tqdm_notebook
+
 
 class PreparedTrajectory(Trajectory):
 

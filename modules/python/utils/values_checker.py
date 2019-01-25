@@ -1,5 +1,5 @@
-from EyeTrackingPackage.modules.python.utils import messages
-from EyeTrackingPackage.modules.python.settings import LANG
+from modules.python.utils import messages
+from modules.python.settings import LANG
 
 
 class ValuesChecker:
