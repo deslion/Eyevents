@@ -1,5 +1,5 @@
-from modules.python.utils import messages
-from modules.python.settings import LANG
+from eyevents.messages import messages
+from eyevents.settings import LANG
 
 
 class ValuesChecker:

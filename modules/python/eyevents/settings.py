@@ -45,4 +45,3 @@ settings = dict(
         velocity_threshold=30,  # velocity threshold for IVT detector, in angular degrees
     )
 )
-
