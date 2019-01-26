@@ -96,15 +96,15 @@ def calculate_angular_parameters(df, settings):
     df['xAng'] = 180 / np.pi * np.arctan((df.porx - refx) / (d * wpix / wid))
     df['yAng'] = 180 / np.pi * np.arctan((df.pory - refy) / (d * hpix / hei))
     # Angular velocity
-    if settings['common']['velocity_type'] == 'finite_difference':
+    if settings['velocity']['velocity_type'] == 'finite_difference':
         df['distAng'] = np.sqrt(np.sum(df[['xAng', 'yAng']].diff()**2, 1))
     else:
         xdash = savgol_filter(x=df['xAng'].values,
-                              window_length=settings['smoothing']['window'],
+                              window_length=settings['velocity']['window'],
                               polyorder=2,
                               deriv=1)
         ydash = savgol_filter(x=df['yAng'].values,
-                              window_length=settings['smoothing']['window'],
+                              window_length=settings['velocity']['window'],
                               polyorder=2,
                               deriv=1)
         df['distAng'] = np.sqrt(xdash**2 + ydash**2)

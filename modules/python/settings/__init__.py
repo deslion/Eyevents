@@ -20,6 +20,11 @@ settings = dict(
         reference_point=[0, 0],  # calibration point, top-left corner as default value. Can be None for center
         velocity_type='analytical',  # velocity calculation type, one of ['analytical', 'finite_difference']
     ),
+    # velocity calculation settings
+    velocity=dict(
+        velocity_type='analytical',
+        window=13
+    ),
     # csv-loading settings
     loading=dict(
         sep=',',  # column separator symbol, for pandas csv-reading
@@ -29,7 +34,7 @@ settings = dict(
     ),
     # contains coordinates smoothing settings
     smoothing=dict(
-        window=5,  # rolling window size
+        window=33,  # rolling window size
         center=True,  # flag, make calculation on the central point, not on the right
         method='median',  # smoothing method, one of [median, mean, savgol]. savgol for Savitzky-Golay filter
         order=2,  # Savitzky-Golay filter order
