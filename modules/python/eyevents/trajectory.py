@@ -62,18 +62,19 @@ class Trajectory:
         else:
             df = df.copy()
             cols_to_smooth = df.drop('time', 1).columns
-            windows = df.loc[:, cols_to_smooth].rolling(window=self.settings['smoothing']['window'],
-                                                        center=self.settings['smoothing']['center'])
-            if self.settings['smoothing']['method'] in ['med', 'median']:
-                windows = windows.median()
-            elif self.settings['smoothing']['method'] in ['avg', 'average', 'mean']:
-                windows = windows.mean()
+            if self.settings['smoothing']['method'] == 'savgol':
+                savgol = lambda x: savgol_filter(x,
+                                                 window_length=self.settings['smoothing']['window'],
+                                                 polyorder=self.settings['smoothing']['order'])
+                windows = df[cols_to_smooth].apply(savgol, axis=0)
             else:
-                windows = df[cols_to_smooth].apply(lambda x: savgol_filter(x,
-                                                                           window_length=self.settings['smoothing'][
-                                                                               'window'],
-                                                                           polyorder=self.settings['smoothing']['order']),
-                                                   axis=0)
+                windows = df.loc[:, cols_to_smooth].rolling(window=self.settings['smoothing']['window'],
+                                                            center=self.settings['smoothing']['center'])
+                if self.settings['smoothing']['method'] in ['med', 'median']:
+                    windows = windows.median()
+                else:
+                    windows = windows.mean()
+
             df.loc[:, cols_to_smooth] = windows
             if self.settings['smoothing']['fillna']:
                 df = df.fillna(method='bfill').fillna(method='ffill')

@@ -171,5 +171,71 @@ Experiments common settings must contain:
     'adjust_time' - flag, adjust time to have 0 as first stamp (t = t - min(t))
     'normalized' - flag, coordinates were normalized to 0..1 interval
     'reference_point' - calibration point, top-left corner as default value. Can be None for center"""
+    ),
+    SETTINGS_SMOOTHING_ERROR=dict(
+        rus="""
+Настройки сглаживания должны содержать следующие поля:
+    'window' - величина скользящего окна в сэмплах
+    'center' - флаг, производить вычисления в середине окна
+    'method' - метод сглаживания: median, mean или savgol. savgol - фильтрация методом Савицкого-Голея
+    'fillna' - флаг, заполнять пропуски, возникшие при сглаживании
+При выбранном методе сглаживания фильтром Савицкого-Голея:
+    'order' - порядок фильтра Савицкого-Голея""",
+        eng="""
+Smoothing settings must contain:
+    'window' - rolling window size
+    'center' - flag, make calculation on the central point, not on the right
+    'method' - smoothing method, one of [median, mean, savgol]. savgol for Savitzky-Golay filter
+    'fillna' - flag, fill na after smoothing, back- and forward fill will be done
+If Savitzky-Golay was chosen as method:
+    'order' - Savitzky-Golay filter order"""
+    ),
+    SETTINGS_SMOOTHING_METHOD_ERROR=dict(
+        rus="""Настройки сглаживания ('smoothing'):
+    В качестве параметра 'method' необходимо указать одно из следующих значений:
+        ['med', 'median', 'avg', 'average', 'mean', 'savgol']""",
+        eng="""Smoothing settings ('smoothing'):
+    One of the following methods must be set as 'method'-key:
+        ['med', 'median', 'avg', 'average', 'mean', 'savgol']"""
+    ),
+    SETTINGS_SMOOTHING_ORDER_ERROR=dict(
+        rus="""Настройки сглаживания ('smoothing'):
+    При выборе метода 'savgol' необходимо задать значение 'order' - порядок фильтра""",
+        eng="""Smoothing settings ('smoothing'):
+    For method 'savgol' filter 'order' must be set in the settings"""
+    ),
+    SETTINGS_VELOCITY_ERROR=dict(
+        rus="""Настройки вычисления скоростей ('velocity') должны содержать поле 'velocity_type'""",
+        eng="""Velocities calculation settings ('velocity') must contain 'velocity_type'-key"""
+    ),
+    SETTINGS_VELOCITY_TYPE_ERROR=dict(
+        rus="""Настройки вычисления скоростей ('velocity'):
+    В качестве параметра 'velocity_type' необходимо указать одно из следующих значений:
+        ['analytical', 'finite_difference']""",
+        eng="""Velocities calculation settings ('velocity'):
+    One of the following types must be set as 'velocity_type'-key:
+        ['analytical', 'finite_difference']"""
+    ),
+    SETTINGS_VELOCITY_WINDOW_ERROR=dict(
+        rus="""Настройки вычисления скоростей ('velocity'):
+    При выборе метода 'analytical' необходимо задать значение 'window' - величина окна фильтра сигнала
+        """,
+        eng="""Velocities calculation settings ('velocity'):
+    For method 'analytical' filter 'window' size must be set in the settings
+        """
+    ),
+    SETTINGS_OCULUS_ERROR=dict(
+        rus="""Настройки определения окуломоторных событий должны иметь следующий вид:
+    oculus=dict(
+        method='IVT',  # метод определения (только IVT на данный момент)
+        velocity_threshold=30,  # порог скорости для IVT-детектора
+    )
+    Другие методы определения событий в разработке""",
+        eng="""Oculomotor events detectors settings must be set as follow:
+    oculus=dict(
+        method='IVT',  # chosen detection method (only IVT at present)
+        velocity_threshold=30,  # velocity threshold for IVT detector, in angular degrees
+    )
+    Other event detectors are in development"""
     )
 )
