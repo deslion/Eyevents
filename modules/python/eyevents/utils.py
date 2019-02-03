@@ -3,6 +3,16 @@ from math import atan2
 import numpy as np
 
 
+def get_shortname(path):
+    """Returns filename only"""
+    buf = path.replace('..', '_').split('.')
+    if len(buf) < 2:
+        shortname = path.split('/')[-1].split('\\')[-1]
+    else:
+        shortname = '_'.join(buf[:-1]).split('\\')[-1].split('/')[-1]
+    return shortname
+
+
 def geron(x, y):
     """Calculates triangle area by Geron's formula"""
     a = np.sqrt((x[1] - x[0])**2 + (y[1] - y[0])**2)

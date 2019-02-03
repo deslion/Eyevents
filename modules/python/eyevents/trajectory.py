@@ -3,6 +3,7 @@ import pandas as pd
 from scipy.signal import savgol_filter
 
 from eyevents.values_checker import ValuesChecker
+from eyevents.utils import get_shortname
 
 
 class Trajectory:
@@ -10,11 +11,7 @@ class Trajectory:
         ValuesChecker.check_settings(settings)
         self.settings = settings.copy()
         self.path = path
-        buf = path.replace('..', '_').split('.')
-        if len(buf) < 2:
-            self.name = path.split('/')[-1].split('\\')[-1]
-        else:
-            self.name = '_'.join(buf[:-1]).split('\\')[-1].split('/')[-1]
+        self.name = get_shortname(path)
         self.raw_df = None
         self.df = None
         self.get_trajectory_as_df()
