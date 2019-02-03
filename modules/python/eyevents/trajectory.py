@@ -8,6 +8,11 @@ from eyevents.utils import get_shortname
 
 class Trajectory:
     def __init__(self, path, settings):
+        """Contains one trajectory values and additional parameters (velocities etc.)
+
+        :param path: path to trajectory file
+        :param settings: settings in proper dictionary format. You can use 'eyevent.utils.help' to see format
+        """
         ValuesChecker.check_settings(settings)
         self.settings = settings.copy()
         self.path = path

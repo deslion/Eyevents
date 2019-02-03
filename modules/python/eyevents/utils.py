@@ -3,6 +3,12 @@ from math import atan2
 import numpy as np
 
 
+def help():
+    from eyevents.messages import messages
+    from eyevents.settings import LANG
+    print(messages['SETTINGS_INFO_MESSAGE'][LANG])
+
+
 def get_shortname(path):
     """Returns filename only"""
     buf = path.replace('..', '_').split('.')

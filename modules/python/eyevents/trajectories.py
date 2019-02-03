@@ -9,7 +9,11 @@ from eyevents.utils import get_shortname
 
 class Trajectories:
     def __init__(self, directory, settings=None):
-        """"""
+        """Contains trajectories with events and their parameters.
+
+        :param directory: path to trajectory files in the same format
+        :param settings: settings in proper dictionary format. You can use 'eyevent.utils.help' to see format
+        """
         if directory[-1] not in ['/', '\\']:
             directory += '/'
         files = [directory + x for x in listdir(directory)]
