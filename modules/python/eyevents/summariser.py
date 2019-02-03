@@ -6,7 +6,62 @@ from eyevents.utils import geron, graham_scan
 
 class Summariser:
     @staticmethod
-    def saccade_params(df, mark='Saccade'):
+    def total_saccade_params(df, code=None, mark='Saccade'):
+        """Performs basic and total saccade calculations
+
+        :param df: events marked data frame
+        :param code: code of the current trial (for several trials in experiment)
+        :param mark: mark of the Saccades in the df
+        :returns: two data frames - basic and total data frames
+        :rtype: (pandas.DataFrame, pandas.DataFrame)
+        """
+        all_params = Summariser.saccade_params(df, code, mark)
+        total_duration = max(df.time)
+        count = len(all_params)
+        horis = np.nansum(all_params.orientation == 'Horisontal')
+        vertic = np.nansum(all_params.orientation == 'Vertical')
+
+        params = dict(
+            count=count,
+            freq=count / total_duration,
+            horis=horis, vertic=vertic,
+            h_freq=horis / total_duration, v_freq=vertic / total_duration,
+            mean_dur=np.nanmean(all_params.duration),
+            mean_amp=np.nanmean(all_params.amplitude),
+            mean_vel=np.nanmean(all_params.meanVelocity),
+            code=code
+        )
+        total_params = pd.DataFrame(params, index=[0])
+        return all_params, total_params
+
+    @staticmethod
+    def total_fixation_params(df, code=None, mark='Fixation'):
+        """Performs basic and total fixations calculations
+
+        :param df: events marked data frame
+        :param code: code of the current trial (for several trials in experiment)
+        :param mark: mark of the Fixations in the df
+        :returns: two data frames - basic and total data frames
+        :rtype: (pandas.DataFrame, pandas.DataFrame)
+        """
+        all_params = Summariser.fixation_params(df, code, mark)
+        total_duration = max(df.time)
+        count = len(all_params)
+
+        params = dict(
+            count=count,
+            freq=count / total_duration,
+            total_dur=np.nansum(all_params.duration),
+            mean_dur=np.nanmean(all_params.duration),
+            area=np.nansum(all_params.area),
+            mean_area=np.nanmean(all_params.area),
+            code=code
+        )
+        total_params = pd.DataFrame(params, index=[0])
+        return all_params, total_params
+
+    @staticmethod
+    def saccade_params(df, code=None, mark='Saccade'):
         """Performs calculation of basic saccades characteristics."""
         df = df[df.event == mark].copy()
         groups = df.groupby('group')
@@ -23,10 +78,11 @@ class Summariser:
         ]
         dfs = [groups.apply(getattr(Summariser, x)) for x in sac_params_funcs]
         result = pd.concat(dfs, sort=False, axis=1)
+        result['code'] = code
         return result
 
     @staticmethod
-    def fixation_params(df, mark='Fixation'):
+    def fixation_params(df, code=None, mark='Fixation'):
         """Performs calculation of basic fixations characteristics."""
         df = df[df.event == mark].copy()
         groups = df.groupby('group')
@@ -38,6 +94,7 @@ class Summariser:
         ]
         dfs = [groups.apply(getattr(Summariser, x)) for x in fix_params_funcs]
         result = pd.concat(dfs, sort=False, axis=1)
+        result['code'] = code
         return result
 
     @staticmethod

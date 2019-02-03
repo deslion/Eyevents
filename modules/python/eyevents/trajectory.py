@@ -10,7 +10,11 @@ class Trajectory:
         ValuesChecker.check_settings(settings)
         self.settings = settings.copy()
         self.path = path
-        self.name = '_'.join(path.split('.')[:-1]).split('\\')[-1].split('/')[-1]
+        buf = path.replace('..', '_').split('.')
+        if len(buf) < 2:
+            self.name = path.split('/')[-1].split('\\')[-1]
+        else:
+            self.name = '_'.join(buf[:-1]).split('\\')[-1].split('/')[-1]
         self.raw_df = None
         self.df = None
         self.get_trajectory_as_df()
