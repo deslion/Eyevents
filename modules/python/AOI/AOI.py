@@ -1,5 +1,5 @@
 import numpy as np
-from modules.python.AOI.Rectangle import Rectangle
+from AOI.Rectangle import Rectangle
 
 
 class AOI:

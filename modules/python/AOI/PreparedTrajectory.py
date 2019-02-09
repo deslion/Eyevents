@@ -1,4 +1,4 @@
-from modules.python.AOI.Trajectory import Trajectory
+from AOI.Trajectory import Trajectory
 import numpy as np
 from tqdm import tqdm, tqdm_notebook
 
