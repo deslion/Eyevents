@@ -19,9 +19,21 @@ class Trajectory:
         self.name = get_shortname(path)
         self.raw_df = None
         self.df = None
+        self.aois_sequence = None
+        self.transition_count = None
+        self.transition_probability = None
+        self.transition_log_probability = None
         self.get_trajectory_as_df()
         self.smooth_trajectory_df()
         self.calculate_angular_parameters()
+        self.calculate_aois()
+        self.get_transition_matrix()
+        self.get_transition_probabilities()
+        self.get_transition_log_probabilities()
+
+    @property
+    def entropy(self):
+        return -np.sum(self.transition_probability * self.transition_log_probability)
 
     def get_trajectory_as_df(self):
         """Loads path as csv data frame via pandas.read_csv with additional parameters from settings
@@ -129,3 +141,50 @@ class Trajectory:
                                                                                value=0)
 
         self.df = df
+
+    def calculate_aois(self):
+        df = self.df.copy()
+
+        grid = self.settings['common']['aois_grid']
+        resolution = self.settings['common']['resolution']
+        samples_for_step = self.settings['common']['samples_for_step']
+        x_step = resolution[0] / grid[0]
+        y_step = resolution[1] / grid[1]
+        xs = np.concatenate([[-np.inf], np.arange(0, resolution[0] + x_step, x_step)])
+        ys = np.concatenate([[-np.inf], np.arange(0, resolution[1] + y_step, y_step)])
+
+        max_group = len(df) // samples_for_step + 1
+        df['t_group'] = np.repeat(np.arange(max_group), samples_for_step)[:len(df)]
+        df = df.groupby('t_group').agg({'porx':'mean', 'pory':'mean'})
+
+        def get_aoi(x):
+            x,y = x[0], x[1]
+            if x<0 or x>resolution[0] or y<0 or y>resolution[1]:
+                return grid[0]*grid[1]
+            else:
+                xp = sum(x > xs) - 1
+                yp = sum(y > ys) - 1
+                return (yp-1) * grid[0] + xp
+
+        df['aoi'] = df.apply(get_aoi, axis=1)
+
+        self.aois_sequence = df.aoi.values
+
+    def get_transition_matrix(self):
+        grid = self.settings['common']['aois_grid']
+        matrix = np.zeros((grid[0]*grid[1]+1, grid[0]*grid[1]+1))
+        for _from, _to in zip(self.aois_sequence[:-1], self.aois_sequence[1:]):
+            matrix[_to][_from] += 1
+        self.transition_count = matrix
+
+    def get_transition_probabilities(self):
+        a = self.transition_count
+        b = np.sum(a, axis=0)
+        matrix = np.divide(a, b, out=np.zeros_like(a), where = b!=0)
+        self.transition_probability = matrix
+
+    def get_transition_log_probabilities(self):
+        a = self.transition_probability
+        mask = np.ones_like(a) * -10
+        matrix = np.log(a, out=mask, where = a!=0)
+        self.transition_log_probability = matrix

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from os import listdir
 
@@ -17,6 +18,7 @@ class Trajectories:
         if directory[-1] not in ['/', '\\']:
             directory += '/'
         files = [directory + x for x in listdir(directory)]
+        shortnames = [get_shortname(x) for x in files]
         self.trajectories = {get_shortname(x): Trajectory(x, settings) for x in files}
         self.dfs = {}
         all_saccades = []
@@ -37,3 +39,25 @@ class Trajectories:
         self.total_saccades = pd.concat(total_saccades, ignore_index=True)
         self.all_fixations = pd.concat(all_fixations, ignore_index=True)
         self.total_fixations = pd.concat(total_fixations, ignore_index=True)
+
+        likelihoods_mask = pd.DataFrame(np.zeros((len(files), len(files))), columns=shortnames, index=shortnames)
+        self.df_likelihood = likelihoods_mask.copy()
+        self.df_log_likelihood = likelihoods_mask.copy()
+        for row in shortnames:
+            for col in shortnames:
+                transitions = self.trajectories[row].transition_count
+                probabilities = self.trajectories[col].transition_probability
+                log_probabilities = self.trajectories[col].transition_log_probability
+                self.df_likelihood.loc[row, col] = Trajectories.get_likelihood(transitions, probabilities)
+                self.df_log_likelihood.loc[row, col] = Trajectories.get_log_likelihood(transitions, log_probabilities)
+
+        self.df_entropies = pd.DataFrame([self.trajectories[x].entropy for x in shortnames],
+                                         columns=['Entropy'], index=shortnames)
+
+    @staticmethod
+    def get_likelihood(transitions, probabilities):
+        return np.product(transitions * probabilities)
+
+    @staticmethod
+    def get_log_likelihood(transitions, log_probabilities):
+        return np.sum(transitions * log_probabilities)

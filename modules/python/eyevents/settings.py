@@ -25,6 +25,8 @@ settings = dict(
         adjust_time=True,  # flag, adjust time to have 0 as first stamp (t = t - min(t))
         normalized=True,  # flag, coordinates were normalized to 0..1 interval
         reference_point=[0, 0],  # calibration point, top-left corner as default value. Can be None for center
+        aois_grid=[5, 5],  # cells for x and y coordinates respectively
+        samples_for_step=100,  # number of samples to averaging and transition calculation
     ),
     # contains coordinates smoothing settings
     smoothing=dict(
