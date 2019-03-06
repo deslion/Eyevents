@@ -7,6 +7,8 @@ from eyevents.detector import Detector
 from eyevents.summariser import Summariser
 from eyevents.utils import get_shortname
 
+from tqdm import tqdm_notebook
+
 
 class Trajectories:
     def __init__(self, directory, settings=None):
@@ -25,7 +27,7 @@ class Trajectories:
         total_saccades = []
         all_fixations = []
         total_fixations = []
-        for key, val in self.trajectories.items():
+        for key, val in tqdm_notebook(self.trajectories.items()):
             detd_df = Detector.ivt(val.df, settings)
             buf_sac = Summariser.total_saccade_params(detd_df, val.name)
             buf_fix = Summariser.total_fixation_params(detd_df, val.name)
