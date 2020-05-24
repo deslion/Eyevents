@@ -15,7 +15,7 @@ class Detector:
         :rtype: pandas.DataFrame
         """
         df = df.copy()
-        df.loc[:, 'event_change'] = np.concatenate([[False], np.not_equal(df.iloc[1:]['event'], df.iloc[:-1]['event'])])
+        df.loc[:, 'event_change'] = np.concatenate([[False], np.not_equal(df.iloc[1:]['event'].values, df.iloc[:-1]['event'].values)])
         df.loc[:, 'group'] = df.event_change.cumsum() + 1
         df.drop('event_change', 1, inplace=True)
         return df

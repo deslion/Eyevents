@@ -114,7 +114,7 @@ class Summariser:
     def amplitude(df):
         """Calculates angular amplitude coordinate-wise and total. Saccades only."""
         if len(df) < 2:
-            amplitude_x, amplitude_y, amplitude = np.nan
+            amplitude_x, amplitude_y, amplitude = np.nan, np.nan, np.nan
         else:
             amplitude_x = np.abs(df.iloc[0]['xAng'] - df.iloc[-1]['xAng'])
             amplitude_y = np.abs(df.iloc[0]['yAng'] - df.iloc[-1]['yAng'])
